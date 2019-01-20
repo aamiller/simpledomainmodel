@@ -55,7 +55,7 @@ public struct Money {
             case "USD":
                 return Money(amount: Int(Double(amount) / 1.25), currency: "USD")
             case "GBP":
-                return Money(amount: (amount / (5/4)) / 2, currency: "GBP")
+                return Money(amount: Int(Double(amount) / 1.25) / 2, currency: "GBP")
             case "EUR":
                 return Money(amount: Int((Double(amount) * (4/5) * 1.5)), currency: "CAN")
             default: print("Unexpected currency")
@@ -90,29 +90,41 @@ public struct Money {
         }
     }
 }
+
+////////////////////////////////////
+// Job
 //
-//////////////////////////////////////
-//// Job
-////
-//open class Job {
-//    fileprivate var title : String
-//    fileprivate var type : JobType
-//
-//    public enum JobType {
-//        case Hourly(Double)
-//        case Salary(Int)
-//    }
-//
-//    public init(title : String, type : JobType) {
-//    }
-//
-//    open func calculateIncome(_ hours: Int) -> Int {
-//    }
-//
-//    open func raise(_ amt : Double) {
-//    }
-//}
-//
+open class Job {
+    fileprivate var title : String
+    fileprivate var type : JobType
+
+    public enum JobType {
+        case Hourly(Double)
+        case Salary(Int)
+    }
+
+    public init(title : String, type : JobType) {
+        self.title = title
+        self.type = type
+    }
+
+    open func calculateIncome(_ hours: Int) -> Int {
+        switch type {
+            case let .Hourly(hourly): return Int(Double(hourly)) * hours
+            case let .Salary(salary): return salary
+        }
+    }
+
+    open func raise(_ amt : Double) {
+        switch type {
+            case let .Hourly(hourly):
+                self.type = .Hourly(hourly + amt)
+            case let .Salary(salary):
+                self.type = .Salary(salary + Int(amt))
+        }
+    }
+}
+
 //////////////////////////////////////
 //// Person
 ////
