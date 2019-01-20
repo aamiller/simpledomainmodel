@@ -30,15 +30,15 @@ public struct Money {
     public func convert(_ to: String) -> Money {
         if to == currency { return Money(amount: amount, currency : currency) }
         switch currency {
-            case "USD":
-                switch to {
-                case "GBP":
-                    return Money(amount: amount / 2, currency: "GBP")
-                case "CAN":
-                    return Money(amount: Int(Double(amount) * 1.25), currency: "CAN")
-                case "EUR":
-                    return Money(amount: Int(Double(amount) * 1.5), currency: "EUR")
-                default: print("Unexpected currency")
+        case "USD":
+            switch to {
+            case "GBP":
+                return Money(amount: amount / 2, currency: "GBP")
+            case "CAN":
+                return Money(amount: Int(Double(amount) * 1.25), currency: "CAN")
+            case "EUR":
+                return Money(amount: Int(Double(amount) * 1.5), currency: "EUR")
+            default: print("Unexpected currency")
             }
         case "GBP":
             switch to {
@@ -97,66 +97,76 @@ public struct Money {
 open class Job {
     fileprivate var title : String
     fileprivate var type : JobType
-
+    
     public enum JobType {
         case Hourly(Double)
         case Salary(Int)
     }
-
+    
     public init(title : String, type : JobType) {
         self.title = title
         self.type = type
     }
-
+    
     open func calculateIncome(_ hours: Int) -> Int {
         switch type {
-            case let .Hourly(hourly): return Int(Double(hourly)) * hours
-            case let .Salary(salary): return salary
+        case let .Hourly(hourly): return Int(Double(hourly)) * hours
+        case let .Salary(salary): return salary
         }
     }
-
+    
     open func raise(_ amt : Double) {
         switch type {
-            case let .Hourly(hourly):
-                self.type = .Hourly(hourly + amt)
-            case let .Salary(salary):
-                self.type = .Salary(salary + Int(amt))
+        case let .Hourly(hourly):
+            self.type = .Hourly(hourly + amt)
+        case let .Salary(salary):
+            self.type = .Salary(salary + Int(amt))
         }
     }
 }
 
-//////////////////////////////////////
-//// Person
-////
-//open class Person {
-//    open var firstName : String = ""
-//    open var lastName : String = ""
-//    open var age : Int = 0
+////////////////////////////////////
+// Person
 //
-//    fileprivate var _job : Job? = nil
-//    open var job : Job? {
-//        get { }
-//        set(value) {
-//        }
-//    }
-//
-//    fileprivate var _spouse : Person? = nil
-//    open var spouse : Person? {
-//        get { }
-//        set(value) {
-//        }
-//    }
-//
-//    public init(firstName : String, lastName: String, age : Int) {
-//        self.firstName = firstName
-//        self.lastName = lastName
-//        self.age = age
-//    }
-//
-//    open func toString() -> String {
-//    }
-//}
-//
+open class Person {
+    open var firstName : String = ""
+    open var lastName : String = ""
+    open var age : Int = 0
+    
+    fileprivate var _job : Job? = nil
+    open var job : Job? {
+        get { return _job }
+        set(value) {
+            if age > 15 {
+                self._job = value
+            }
+        }
+    }
+    
+    fileprivate var _spouse : Person? = nil
+    open var spouse : Person? {
+        get { return _spouse }
+        set(value) {
+            if (spouse == nil) && (age > 18) {
+                self._spouse = value
+            }
+        }
+    }
+    
+    public init(firstName : String, lastName: String, age : Int) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+    }
+    
+    open func toString() -> String {
+        //"[Person: firstName: Ted lastName: Neward age: 45 job: Salary(1000) spouse: Charlotte]"
+        let job : String = _job?.title ?? "nil"
+        let spouse : String = _spouse?.firstName ?? "nil"
+        return "[Person: firstName:\(firstName) lastName:\(lastName) age:\(age) job:\(job) spouse:\(spouse)]"
+    }
+}
+
 //////////////////////////////////////
 //// Family
 ////
@@ -176,4 +186,4 @@ open class Job {
 //
 //
 //
-//
+//}
