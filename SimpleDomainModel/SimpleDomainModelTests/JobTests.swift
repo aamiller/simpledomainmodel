@@ -27,7 +27,6 @@ class JobTests: XCTestCase {
     XCTAssert(job.calculateIncome(50) == 1000)
 
     job.raise(1000)
-    print(job.calculateIncome(50))
     XCTAssert(job.calculateIncome(50) == 2000)
   }
 

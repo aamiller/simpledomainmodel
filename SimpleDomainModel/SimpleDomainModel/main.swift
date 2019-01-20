@@ -110,7 +110,7 @@ open class Job {
     
     open func calculateIncome(_ hours: Int) -> Int {
         switch type {
-        case let .Hourly(hourly): return Int(Double(hourly)) * hours
+        case let .Hourly(hourly): return Int(Double(hourly) * Double(hours))
         case let .Salary(salary): return salary
         }
     }
@@ -167,23 +167,36 @@ open class Person {
     }
 }
 
-//////////////////////////////////////
-//// Family
-////
-//open class Family {
-//    fileprivate var members : [Person] = []
+////////////////////////////////////
+// Family
 //
-//    public init(spouse1: Person, spouse2: Person) {
-//    }
-//
-//    open func haveChild(_ child: Person) -> Bool {
-//    }
-//
-//    open func householdIncome() -> Int {
-//    }
-//}
-//
-//
-//
-//
-//}
+open class Family {
+    fileprivate var members : [Person] = []
+    
+    public init(spouse1: Person, spouse2: Person) {
+        spouse1._spouse = spouse2
+        spouse2._spouse = spouse1
+        members.append(contentsOf: [spouse1, spouse2])
+    }
+    
+    open func haveChild(_ child: Person) -> Bool {
+        for p in members {
+            if p._spouse != nil && p.age >= 21 {
+                members.append(contentsOf: [child])
+                return true
+            }
+        }
+        return false
+    }
+    
+    open func householdIncome() -> Int {
+        var sum : Int = 0
+        for person in members {
+            if let job = person._job {
+                sum = sum + job.calculateIncome(2000)
+            }
+        }
+        return sum
+    }
+}
+
